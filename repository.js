@@ -70,7 +70,7 @@ CustomerRepository.prototype.find = function (id) {
 }
 
 CustomerRepository.prototype.findIndex = function (id) {
-    const index = null;
+    let index = null;
     this.customers.forEach(function (item, key) {
         if (item.id == id) {
             index = key;

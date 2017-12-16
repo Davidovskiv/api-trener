@@ -2,11 +2,13 @@ const CustomerRepository = require('./repository');
 const config = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const repository = new CustomerRepository();
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use(cors());
 
 app.get('/customers', function (request, response) {
     response.json(repository.findAll());
@@ -27,7 +29,7 @@ app.post('/customers', function (request, response) {
         response.status(400).end();
         return; 
     }
-    repository.save({
+    const newCustomer = {
         name: customer.name,
         age: customer.age,
         type: customer.type,
@@ -39,14 +41,17 @@ app.post('/customers', function (request, response) {
             city: (customer.address || {}).city || ''
         },
         categories: customer.categories || []
-    });
-    response.sendStatus(200);
+    };
+    repository.save(newCustomer);
+    response.json(newCustomer).status(200).end();
 });
 
 app.delete('/customers/:id', function (request, response) {
     try {
-        repository.remove(request.params.id);
-        response.sendStatus(200);
+        const id = parseInt(request.params.id);
+        const customer = repository.find(id);
+        repository.remove(id);
+        response.json(customer).status(200).end();
     } catch (exeception) {
         response.sendStatus(404);
     }

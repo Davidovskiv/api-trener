@@ -88,19 +88,19 @@ app.post('/customers/:id', function (request, response) {
    
     try {
         const id = parseInt(request.params.id);
-        // const customer = customerRepository.find(id);
-        // const trening = request.body
+        const customer = customerRepository.find(id);
+        const trening = request.body
 
-        // const newTrening = {
-        //     type: trening.type ||'' ,
-        //     date: trening.date || '',
-        //     time: trening.time ||'',
-        // }
+        const newTrening = {
+            type: trening.type ||'' ,
+            date: trening.date || '',
+            time: trening.time ||'',
+        }
 
 
 
         customerRepository.addTrening(id, newTrening);
-        response.json(customer).status(200).end();
+        response.json(newTrening).status(200).end();
     } catch (exeception) {
         response.sendStatus(404);
     }
@@ -130,6 +130,8 @@ app.get('/contracts', function (request, response) {
     }, 1000);
 });
 
+
+
 app.get('/contracts/:id', function (request, response) {
     const contractId = request.params.id;
     setTimeout(() => {
@@ -141,4 +143,7 @@ app.get('/contracts/:id', function (request, response) {
     }, 1000);
 });
 
-app.listen(config.port);
+
+const port = process.env.PORT || config.port
+
+app.listen(port);
